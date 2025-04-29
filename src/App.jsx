@@ -51,7 +51,7 @@ function App() {
       </nav>
 
       {/* main content */}
-      <main className="p-10 h-[calc(100vh-5rem)]  text-xl flex flex-col-reverse justify-end items-center lg:flex-row lg:items-start ">
+      <main className="p-10 h-[calc(100vh-5rem)]  text-3xl  flex flex-col-reverse justify-end items-center lg:flex-row lg:items-start ">
         <section className="w-full md:w-3/4 lg:w-1/2 mx-16 my-8">
           <ul>
             <AnimatePresence>
@@ -67,14 +67,14 @@ function App() {
                   <span className="max-w-3/4 break-words">{task.text}</span>
                   <div className="flex ">
                     <CheckCircleIcon
-                      className={`size-5 me-3 cursor-pointer ${
+                      className={`size-7  me-5 cursor-pointer ${
                         task.checked ? "text-green-500" : "text-red-500"
                       }`}
                       onClick={() => handleCheck(task.id)}
                     />
 
                     <TrashIcon
-                      className="size-5 cursor-pointer"
+                      className="size-7  cursor-pointer"
                       onClick={() => handleDelete(task.id)}
                     />
                   </div>
