@@ -12,16 +12,19 @@ export const TaskItem = ({ task, onDelete, onCheck }) => {
       exit={{ opacity: 0, x: -30 }}
       transition={{ duration: 0.3 }}
     >
-      <span className="max-w-3/4 break-words">{task.text}</span>
+      <span className="max-w-3/4 text-2xl break-words">{task.text}</span>
       <div className="flex ">
         <CheckCircleIcon
-          className={`size-7  me-5 cursor-pointer ${
+          className={`size-7  me-5 cursor-pointer hover:opacity-75 transition duration-300 ease-in-out ${
             task.checked ? "text-green-500" : "text-red-500"
           }`}
           onClick={onCheck}
         />
 
-        <TrashIcon className="size-7  cursor-pointer" onClick={onDelete} />
+        <TrashIcon
+          className="size-7  cursor-pointer hover:opacity-75 transition duration-300 ease-in-out"
+          onClick={onDelete}
+        />
       </div>
     </motion.li>
   );
