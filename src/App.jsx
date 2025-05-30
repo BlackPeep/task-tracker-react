@@ -43,7 +43,7 @@ function App() {
     );
   }
 
-  function handleDelete(id) {
+  function handleDeleteTask(id) {
     setTaskLists((prevLists) =>
       prevLists.map((list) =>
         list.id === activeList.id
@@ -68,7 +68,7 @@ function App() {
     );
   }
 
-  function handleCreateTaskList(name) {
+  function handleCreateList(name) {
     const newList = {
       id: Date.now(),
       name,
@@ -110,7 +110,7 @@ function App() {
       {showModal && (
         <TaskListModal
           onClose={() => setShowModal(false)}
-          onCreate={handleCreateTaskList}
+          onCreate={handleCreateList}
         />
       )}
 
@@ -118,33 +118,20 @@ function App() {
       <main className="p-10 h-[calc(100vh-5rem)]  text-3xl  flex flex-col-reverse justify-end items-center lg:flex-row lg:items-start ">
         <Section>
           {activeList ? (
-            <div>
-              <div className="flex items-center justify-between gap-5">
-                <h2 className="text-3xl font-bold tracking-wide ">
-                  {activeList.name}
-                </h2>
-
-                <button
-                  className=" text-xs text-neutral-50 cursor-pointer rounded-md  py-2 px-4 hover:opacity-75 transition duration-300 ease-in-out bg-red-500"
-                  onClick={() => handleDeleteList(activeList.id)}
-                >
-                  Delete List
-                </button>
-              </div>
-              <hr className="my-4 " />
-              <Tasklist
-                key={activeListId}
-                tasks={activeList.tasks}
-                onDelete={(id) => handleDelete(id, activeListId)}
-                onCheck={(id) => handleToggleCheck(id, activeListId)}
-              />
-            </div>
+            <Tasklist
+              key={activeListId}
+              tasks={activeList.tasks}
+              activeList={activeList}
+              handleDeleteList={handleDeleteList}
+              onDelete={(id) => handleDeleteTask(id, activeListId)}
+              onCheck={(id) => handleToggleCheck(id, activeListId)}
+            />
           ) : (
-            <p className="text-xl">Select or Create a Task List.</p>
+            <p className="text-xl">No Task List Added yet.</p>
           )}
         </Section>
 
-        <Section className="w-full md:w-3/4 lg:w-1/2 mx-16 my-8">
+        <Section>
           <TaskForm onAddTask={(text) => handleAddTask(text, activeListId)} />
         </Section>
       </main>

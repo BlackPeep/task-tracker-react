@@ -2,20 +2,38 @@ import { AnimatePresence } from "motion/react";
 
 import React from "react";
 import { TaskItem } from "./TaskItem";
+import TaskListHeader from "./TaskListHeader";
 
-export const Tasklist = ({ tasks, onDelete, onCheck }) => {
+export const Tasklist = ({
+  tasks,
+  onDelete,
+  onCheck,
+  activeList,
+  handleDeleteList,
+}) => {
   return (
-    <ul>
+    <div className="w-full">
       <AnimatePresence>
-        {tasks.map((task) => (
-          <TaskItem
-            task={task}
-            key={task.id}
-            onDelete={() => onDelete(task.id)}
-            onCheck={() => onCheck(task.id)}
+        {activeList && (
+          <TaskListHeader
+            key={activeList.id}
+            activeList={activeList}
+            handleDeleteList={handleDeleteList}
           />
-        ))}
+        )}
       </AnimatePresence>
-    </ul>
+      <ul>
+        <AnimatePresence>
+          {tasks.map((task) => (
+            <TaskItem
+              task={task}
+              key={task.id}
+              onDelete={() => onDelete(task.id)}
+              onCheck={() => onCheck(task.id)}
+            />
+          ))}
+        </AnimatePresence>
+      </ul>
+    </div>
   );
 };
