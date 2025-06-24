@@ -19,7 +19,7 @@ export const TaskForm = ({ onAddTask }) => {
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
       />
-      <button className="cursor-pointer bg-indigo-950 text-white rounded-md w-full sm:w-3/4 mx-auto p-1 hover:opacity-75 transition duration-300 ease-in-out">
+      <button className="cursor-pointer bg-indigo-900 text-white rounded-md w-full sm:w-3/4 mx-auto p-1 hover:opacity-75 transition duration-300 ease-in-out">
         Add Task
       </button>
     </form>

@@ -19,7 +19,7 @@ const TaskListModal = ({ onClose, onCreate }) => {
   return (
     <div className="fixed inset-0 bg-neutral-50/50 dark:bg-gray-900/50 flex items-center justify-center z-50 ">
       <form
-        className="bg-indigo-950 text-neutral-50 p-6 rounded-xl shadow-xl w-full max-w-sm flex justify-center items-center flex-col h-1/4"
+        className="bg-indigo-900 text-neutral-50 p-6 rounded-xl shadow-xl w-full max-w-sm flex justify-center items-center flex-col h-1/4"
         onSubmit={handleSubmit}
       >
         <h2 className="text-2xl mb-4">Create new Task List</h2>

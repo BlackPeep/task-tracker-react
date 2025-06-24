@@ -12,7 +12,7 @@ const Drawer = ({
 }) => {
   return (
     <div
-      className={`fixed z-50  top-0 right-0 h-full w-64 sm:w-80 bg-neutral-50 dark:bg-indigo-950 shadow-2xl transform transition-transform durtaion-300 overflow-y-auto ${
+      className={`fixed z-50  top-0 right-0 h-full w-64 sm:w-80 bg-neutral-50 dark:bg-indigo-950 border-l border-neutral-200 dark:border-indigo-800  transform transition-transform ease-in-out duration-300 overflow-y-auto ${
         isOpen ? "translate-x-0" : "translate-x-full"
       }`}
     >

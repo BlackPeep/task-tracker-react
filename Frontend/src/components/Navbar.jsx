@@ -19,8 +19,8 @@ const Navbar = ({
   }, [taskLists, isOpen]);
 
   return (
-    <nav className=" bg-indigo-950  flex justify-between items-center px-10 h-20">
-      <h1 className="text-xl md:text-3xl text-white font-bold">Task Tracker</h1>
+    <nav className=" bg-indigo-900  flex justify-between items-center  px-5 sm:px-10 h-20">
+      <h1 className="text-md md:text-3xl text-white font-bold">Task Tracker</h1>
 
       <div className="flex  items-center justify-between gap-5">
         <div className="flex  justify-between items-center gap-3 ">
