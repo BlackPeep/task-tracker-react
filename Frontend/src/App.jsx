@@ -105,6 +105,7 @@ function App() {
         handleSelectList={handleSelectList}
         onAddListClick={() => setShowModal(true)}
         activeListId={activeListId}
+        onDeleteList={handleDeleteList}
       />
 
       {showModal && (
