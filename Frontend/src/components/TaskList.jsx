@@ -4,22 +4,12 @@ import React from "react";
 import { TaskItem } from "./TaskItem";
 import TaskListHeader from "./TaskListHeader";
 
-export const Tasklist = ({
-  tasks,
-  onDelete,
-  onCheck,
-  activeList,
-  handleDeleteList,
-}) => {
+export const Tasklist = ({ tasks, onDelete, onCheck, activeList }) => {
   return (
     <div className="w-full">
       <AnimatePresence>
         {activeList && (
-          <TaskListHeader
-            key={activeList.id}
-            activeList={activeList}
-            handleDeleteList={handleDeleteList}
-          />
+          <TaskListHeader key={activeList.id} activeList={activeList} />
         )}
       </AnimatePresence>
       <ul>

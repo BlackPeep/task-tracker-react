@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
-
+import Home from "./pages/Home";
+import { Routes, Route } from "react-router-dom";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import CTABar from "./components/CTABar";
 import Navbar from "./components/Navbar";
-import { Section } from "./components/Section";
-import { Tasklist } from "./components/Tasklist";
-import { TaskForm } from "./components/TaskForm";
+import { useState, useEffect } from "react";
 import TaskListModal from "./components/TaskListModal";
 
 function App() {
@@ -13,12 +14,12 @@ function App() {
     return saved || [];
   });
 
-  const [showModal, setShowModal] = useState(false);
-
   const [activeListId, setActiveListId] = useState(() => {
     const saved = JSON.parse(localStorage.getItem("activeListId"));
     return saved || null;
   });
+
+  const [showModal, setShowModal] = useState(false);
 
   const activeList = taskLists.find((list) => list.id === activeListId);
 
@@ -114,28 +115,25 @@ function App() {
           onCreate={handleCreateList}
         />
       )}
-
-      {/* main content */}
-      <main className="p-10 h-[calc(100vh-5rem)]  text-3xl  flex flex-col-reverse justify-end items-center lg:flex-row lg:items-start ">
-        <Section>
-          {activeList ? (
-            <Tasklist
-              key={activeListId}
-              tasks={activeList.tasks}
-              activeList={activeList}
-              handleDeleteList={handleDeleteList}
-              onDelete={(id) => handleDeleteTask(id, activeListId)}
-              onCheck={(id) => handleToggleCheck(id, activeListId)}
-            />
-          ) : (
-            <p className="text-xl">No Task List Added yet.</p>
-          )}
-        </Section>
-
-        <Section>
-          <TaskForm onAddTask={(text) => handleAddTask(text, activeListId)} />
-        </Section>
-      </main>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <>
+              <CTABar />
+              <Home
+                activeList={activeList}
+                activeListId={activeListId}
+                handleAddTask={handleAddTask}
+                handleToggleCheck={handleToggleCheck}
+                handleDeleteTask={handleDeleteTask}
+              />
+            </>
+          }
+        />
+        <Route path="/login" element={<Login />} />
+        <Route path="/regist" element={<Register />} />
+      </Routes>
     </>
   );
 }
