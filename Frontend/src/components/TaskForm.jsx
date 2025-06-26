@@ -14,7 +14,7 @@ export const TaskForm = ({ onAddTask }) => {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col ">
       <input
-        placeholder="Enter your Task"
+        placeholder="Enter Task"
         className=" mb-4 p-1 outline-1 rounded-md"
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
