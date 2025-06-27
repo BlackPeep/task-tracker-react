@@ -2,6 +2,7 @@ import { PlusIcon } from "@heroicons/react/16/solid";
 import { useState, useEffect } from "react";
 import { Bars3Icon } from "@heroicons/react/16/solid";
 import Drawer from "./Drawer";
+import { Link } from "react-router-dom";
 
 const Navbar = ({
   onAddListClick,
@@ -20,7 +21,11 @@ const Navbar = ({
 
   return (
     <nav className=" bg-indigo-900  flex justify-between items-center  px-5 sm:px-10 h-20">
-      <h1 className="text-md md:text-3xl text-white font-bold">Task Tracker</h1>
+      <Link to={"/"}>
+        <h1 className="text-md md:text-3xl bg-transparent text-white font-bold cursor-pointer hover:scale-115 hover:translate-1 hover:text-black   transition duration-300 ease-in-out">
+          Task Tracker
+        </h1>
+      </Link>
 
       <div className="flex  items-center justify-between gap-5">
         <div className="flex  justify-between items-center gap-3 ">

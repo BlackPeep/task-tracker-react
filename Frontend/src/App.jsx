@@ -21,6 +21,9 @@ function App() {
 
   const [showModal, setShowModal] = useState(false);
 
+  // probably temporary
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   const activeList = taskLists.find((list) => list.id === activeListId);
 
   useEffect(() => {
@@ -120,7 +123,8 @@ function App() {
           path="/"
           element={
             <>
-              <CTABar />
+              {!isLoggedIn && <CTABar />}
+
               <Home
                 activeList={activeList}
                 activeListId={activeListId}
@@ -131,8 +135,14 @@ function App() {
             </>
           }
         />
-        <Route path="/login" element={<Login />} />
-        <Route path="/regist" element={<Register />} />
+        <Route
+          path="/login"
+          element={<Login setIsLoggedIn={setIsLoggedIn} />}
+        />
+        <Route
+          path="/register"
+          element={<Register setIsLoggedIn={setIsLoggedIn} />}
+        />
       </Routes>
     </>
   );

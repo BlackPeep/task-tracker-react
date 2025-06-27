@@ -13,7 +13,7 @@ const Home = ({
   return (
     <>
       {/* main content */}
-      <main className="px-10 h-[calc(100vh-5rem)]  text-3xl  flex flex-col-reverse justify-end items-center lg:flex-row lg:items-start ">
+      <main className="px-10 h-[calc(100vh-7.75rem)]  text-3xl  flex flex-col-reverse justify-end items-center lg:flex-row lg:items-start ">
         <Section>
           {activeList ? (
             <Tasklist
