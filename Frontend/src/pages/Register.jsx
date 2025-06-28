@@ -11,9 +11,10 @@ const Register = ({ setIsLoggedIn }) => {
     password: false,
     confirmPassword: false,
     passwordMatch: false,
+    apiError: "",
   });
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
 
     if (!username.trim() || !password.trim() || !confirmPassword.trim()) {
@@ -31,8 +32,28 @@ const Register = ({ setIsLoggedIn }) => {
       return;
     }
 
-    setIsLoggedIn(true);
-    navigate("/");
+    try {
+      const response = await fetch("http://localhost:5005/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        setErrors({ apiError: errorData.message || "Login Failed" });
+        return;
+      }
+
+      const data = await response.json();
+
+      localStorage.setItem("token", data.token);
+
+      setIsLoggedIn(true);
+      navigate("/");
+    } catch (error) {
+      setErrors({ apiError: "Network error. Please try again" });
+    }
   }
 
   return (

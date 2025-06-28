@@ -6,6 +6,7 @@ import CTABar from "./components/CTABar";
 import Navbar from "./components/Navbar";
 import { useState, useEffect } from "react";
 import TaskListModal from "./components/TaskListModal";
+import UserBar from "./components/UserBar";
 
 function App() {
   const [taskLists, setTaskLists] = useState(() => {
@@ -21,10 +22,16 @@ function App() {
 
   const [showModal, setShowModal] = useState(false);
 
-  // probably temporary
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const activeList = taskLists.find((list) => list.id === activeListId);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsLoggedIn(true);
+    }
+  }, []);
 
   useEffect(() => {
     localStorage.setItem("taskLists", JSON.stringify(taskLists));
@@ -124,6 +131,7 @@ function App() {
           element={
             <>
               {!isLoggedIn && <CTABar />}
+              {isLoggedIn && <UserBar setIsLoggedIn={setIsLoggedIn} />}
 
               <Home
                 activeList={activeList}

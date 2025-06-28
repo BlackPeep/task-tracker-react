@@ -5,9 +5,13 @@ const Login = ({ setIsLoggedIn }) => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState({ username: false, password: false });
+  const [errors, setErrors] = useState({
+    username: false,
+    password: false,
+    apiError: "",
+  });
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
 
     if (!username.trim() || !password.trim()) {
@@ -17,9 +21,28 @@ const Login = ({ setIsLoggedIn }) => {
       });
       return;
     }
+    try {
+      const response = await fetch("http://localhost:5005/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      });
 
-    setIsLoggedIn(true);
-    navigate("/");
+      if (!response.ok) {
+        const errorData = await response.json();
+        setErrors({ apiError: errorData.message || "Login Failed" });
+        return;
+      }
+
+      const data = await response.json();
+
+      localStorage.setItem("token", data.token);
+
+      setIsLoggedIn(true);
+      navigate("/");
+    } catch (error) {
+      setErrors({ apiError: "Network error. Please try again" });
+    }
   }
 
   return (
@@ -47,6 +70,9 @@ const Login = ({ setIsLoggedIn }) => {
           )}
           {errors.password && (
             <span className="text-xs text-red-500 ">Password is required</span>
+          )}
+          {errors.apiError && (
+            <span className="text-xs text-red-500"> {errors.apiError}</span>
           )}
           <Link to={"/register"}>Don't have an account? Register here</Link>
         </div>

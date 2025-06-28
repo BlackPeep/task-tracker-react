@@ -13,7 +13,15 @@ exports.register = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new User({ username, password: hashedPassword });
     await newUser.save();
-    res.status(201).json({ message: "User created" });
+
+    // res.status(201).json({ message: "User created" });
+    const token = jwt.sign(
+      { id: newUser.id, username: newUser.username },
+      JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+
+    res.json({ token, user: { id: newUser.id, username: newUser.username } });
   } catch (err) {
     res.status(500).json({ message: "Server error" });
   }
@@ -29,7 +37,11 @@ exports.login = async (req, res) => {
     if (!isMatch)
       return res.status(400).json({ message: "Invalid Credentials" });
 
-    const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: "7d" });
+    const token = jwt.sign(
+      { id: user.id, username: user.username },
+      JWT_SECRET,
+      { expiresIn: "7d" }
+    );
     res.json({ token, user: { id: user.id, username: user.username } });
   } catch (err) {
     res.status(500).json({ message: "Server error" });
