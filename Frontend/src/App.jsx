@@ -7,11 +7,14 @@ import Navbar from "./components/Navbar";
 import { useState, useEffect } from "react";
 import TaskListModal from "./components/TaskListModal";
 import UserBar from "./components/UserBar";
+import toast, { Toaster } from "react-hot-toast";
 
 function App() {
+  const token = localStorage.getItem("token");
+  const [isLoggedIn, setIsLoggedIn] = useState(!!token);
+
   const [taskLists, setTaskLists] = useState(() => {
     const saved = JSON.parse(localStorage.getItem("taskLists"));
-
     return saved || [];
   });
 
@@ -20,18 +23,55 @@ function App() {
     return saved || null;
   });
 
+  const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
-
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const activeList = taskLists.find((list) => list.id === activeListId);
 
+  //Get lists
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      setIsLoggedIn(true);
+    if (isLoggedIn) {
+      setLoading(true);
+      fetch("http://localhost:5005/api/taskLists/", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((res) => res.json())
+        .then((listsFromDb) => {
+          const normalized = listsFromDb.map((list) => ({
+            ...list,
+            id: list._id,
+            tasks: list.tasks.map((task) => ({
+              ...task,
+              id: task._id,
+            })),
+          }));
+          setTaskLists(normalized);
+
+          //if no activelistId or current activelistId is not in fetched lists, set default
+
+          if (
+            !activeListId ||
+            !normalized.some((list) => list.id === activeListId)
+          ) {
+            setActiveListId(normalized.length > 0 ? normalized[0].id : null);
+          }
+        })
+        .catch((err) => console.error("failed to fetch tasklists", err))
+        .finally(() => {
+          setLoading(false);
+        });
+    } else {
+      const saved = JSON.parse(localStorage.getItem("taskLists"));
+      setTaskLists(saved || []);
+      const savedActiveListId = JSON.parse(
+        localStorage.getItem("activeListId")
+      );
+      setActiveListId(savedActiveListId || null);
+      setLoading(false);
     }
-  }, []);
+  }, [isLoggedIn]);
 
   useEffect(() => {
     localStorage.setItem("taskLists", JSON.stringify(taskLists));
@@ -43,7 +83,13 @@ function App() {
 
   // Functions
   function handleAddTask(text) {
-    const newTask = { id: Date.now(), text, checked: false };
+    const tempId = Date.now();
+    const newTask = {
+      id: tempId, //used for react rendering
+      _id: null, //used for db reference and is set on api response
+      title: text,
+      completed: false,
+    };
 
     setTaskLists((prevLists) =>
       prevLists.map((list) =>
@@ -52,42 +98,144 @@ function App() {
           : list
       )
     );
+
+    if (isLoggedIn) {
+      const { _id, ...taskToSend } = newTask;
+
+      fetch(`http://localhost:5005/api/taskLists/${activeListId}/tasks`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(taskToSend),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setTaskLists((prev) =>
+            prev.map((list) =>
+              list.id === activeListId
+                ? {
+                    ...list,
+                    tasks: list.tasks.map((task) =>
+                      task.id === tempId ? { ...task, _id: data._id } : task
+                    ),
+                  }
+                : list
+            )
+          );
+        })
+        .catch((err) => {
+          console.error("failed to sync to backend", err);
+        });
+    }
   }
 
-  function handleDeleteTask(id) {
+  function handleDeleteTask(taskId) {
+    const task = activeList.tasks.find((task) => task.id === taskId);
+
     setTaskLists((prevLists) =>
       prevLists.map((list) =>
         list.id === activeList.id
-          ? { ...list, tasks: list.tasks.filter((task) => task.id !== id) }
+          ? { ...list, tasks: list.tasks.filter((task) => task.id !== taskId) }
           : list
       )
     );
+
+    if (isLoggedIn) {
+      fetch(
+        `http://localhost:5005/api/taskLists/${activeListId}/tasks/${task._id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      ).catch((err) => {
+        console.error("failed to sync to backend", err);
+      });
+    }
   }
 
-  function handleToggleCheck(id) {
-    setTaskLists((prevList) =>
-      prevList.map((list) =>
-        list.id === activeList.id
-          ? {
-              ...list,
-              tasks: list.tasks.map((task) =>
-                task.id === id ? { ...task, checked: !task.checked } : task
-              ),
-            }
-          : list
-      )
-    );
+  function handleToggleCheck(taskId) {
+    setTaskLists((prevLists) => {
+      let updatedTask = null;
+
+      const newLists = prevLists.map((list) => {
+        if (list.id !== activeListId) return list;
+
+        const newTasks = list.tasks.map((task) => {
+          if (task.id === taskId) {
+            // match by frontend id
+            updatedTask = { ...task, completed: !task.completed };
+            return updatedTask;
+          }
+          return task;
+        });
+
+        return { ...list, tasks: newTasks };
+      });
+
+      if (isLoggedIn && updatedTask && updatedTask._id) {
+        // only sync if backend id exists
+        const { id, ...taskToSend } = updatedTask;
+
+        fetch(
+          `http://localhost:5005/api/taskLists/${activeListId}/tasks/${updatedTask._id}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(taskToSend),
+          }
+        ).catch((err) => {
+          console.error("failed to sync to backend", err);
+        });
+      }
+      return newLists;
+    });
   }
 
   function handleCreateList(name) {
+    const tempId = Date.now();
     const newList = {
-      id: Date.now(),
+      id: tempId,
       name,
       tasks: [],
     };
 
-    setTaskLists([...taskLists, newList]);
-    setActiveListId(newList.id);
+    setTaskLists((prev) => [...prev, newList]);
+    setActiveListId(tempId);
+
+    if (isLoggedIn) {
+      const { id, ...listToSend } = newList;
+
+      fetch("http://localhost:5005/api/taskLists", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(listToSend),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setTaskLists((prev) =>
+            prev.map((list) =>
+              list.id === tempId ? { ...list, id: data._id } : list
+            )
+          );
+          setActiveListId(data._id);
+        })
+        .catch((err) => {
+          console.error("failed to sync to backend", err);
+        });
+    }
+
+    toast.success("Task List created");
   }
 
   function handleSelectList(id) {
@@ -98,6 +246,7 @@ function App() {
     const updatedTaskLists = taskLists.filter((list) => list.id !== id);
 
     setTaskLists(updatedTaskLists);
+    toast.success("List deleted");
 
     if (activeListId === id) {
       if (updatedTaskLists.length > 0) {
@@ -105,6 +254,18 @@ function App() {
       } else {
         setActiveListId(null);
       }
+    }
+
+    if (isLoggedIn) {
+      fetch(`http://localhost:5005/api/taskLists/${activeListId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }).catch((err) => {
+        console.error("failed to sync to backend", err);
+      });
     }
   }
 
@@ -130,15 +291,20 @@ function App() {
           path="/"
           element={
             <>
-              {!isLoggedIn && <CTABar />}
-              {isLoggedIn && <UserBar setIsLoggedIn={setIsLoggedIn} />}
+              {isLoggedIn ? (
+                <UserBar setIsLoggedIn={setIsLoggedIn} />
+              ) : (
+                <CTABar />
+              )}
 
               <Home
+                loadingTasks={loading}
                 activeList={activeList}
                 activeListId={activeListId}
                 handleAddTask={handleAddTask}
                 handleToggleCheck={handleToggleCheck}
                 handleDeleteTask={handleDeleteTask}
+                taskLists={taskLists}
               />
             </>
           }
@@ -152,6 +318,7 @@ function App() {
           element={<Register setIsLoggedIn={setIsLoggedIn} />}
         />
       </Routes>
+      <Toaster position="top-center" reverseOrder={false} />
     </>
   );
 }

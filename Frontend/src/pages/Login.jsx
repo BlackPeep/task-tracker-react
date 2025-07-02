@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const Login = ({ setIsLoggedIn }) => {
   const navigate = useNavigate();
@@ -40,6 +41,7 @@ const Login = ({ setIsLoggedIn }) => {
 
       setIsLoggedIn(true);
       navigate("/");
+      toast.success("Logged in successfully");
     } catch (error) {
       setErrors({ apiError: "Network error. Please try again" });
     }

@@ -3,7 +3,7 @@ const TaskList = require("../models/TaskList");
 exports.showLists = async (req, res) => {
   //Get all taskList
   try {
-    const lists = await TaskList.find();
+    const lists = await TaskList.find({ userId: req.user.id });
     if (!lists) return res.status(404).json({ error: "List not found" });
 
     res.status(200).json(lists);
@@ -15,7 +15,7 @@ exports.showLists = async (req, res) => {
 exports.addTaskList = async (req, res) => {
   // Add new tasklist
   try {
-    const newList = new TaskList(req.body);
+    const newList = new TaskList({ ...req.body, userId: req.user.id });
     const saved = await newList.save();
     res.status(201).json(saved);
   } catch (err) {
@@ -29,10 +29,14 @@ exports.addTask = async (req, res) => {
     const list = await TaskList.findById(req.params.listId);
     if (!list) return res.status(404).json({ error: "List not found" });
 
-    list.tasks.push(req.body);
+    const newTask = req.body;
+    list.tasks.push(newTask);
     await list.save();
-    res.status(201).json(list);
+
+    const addedTask = list.tasks[list.tasks.length - 1];
+    res.status(201).json(addedTask);
   } catch (err) {
+    console.log(err);
     res.status(500).json({ error: "Server error", details: err.message });
   }
 };

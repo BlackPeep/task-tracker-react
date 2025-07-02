@@ -13,12 +13,12 @@ export const TaskItem = ({ task, onDelete, onCheck }) => {
       transition={{ duration: 0.3 }}
     >
       <span className="text-2xl  break-words whitespace-normal overflow-hidden  max-w-md">
-        {task.text}
+        {task.title}
       </span>
       <div className="flex ">
         <CheckCircleIcon
           className={`size-7  me-5 cursor-pointer ${
-            task.checked ? "text-green-500" : "text-red-500"
+            task.completed ? "text-green-500" : "text-red-500"
           }`}
           onClick={onCheck}
         />

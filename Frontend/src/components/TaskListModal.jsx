@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import toast from "react-hot-toast";
 
 const TaskListModal = ({ onClose, onCreate }) => {
   const [name, setName] = useState("");
@@ -10,7 +11,10 @@ const TaskListModal = ({ onClose, onCreate }) => {
 
   function handleSubmit(e) {
     e.preventDefault();
-    if (!name.trim()) return;
+    if (!name.trim()) {
+      toast.error("List name cannot be empty", { id: "list-empty" });
+      return;
+    }
     onCreate(name.trim());
     setName("");
     onClose();

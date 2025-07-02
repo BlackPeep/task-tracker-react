@@ -1,6 +1,7 @@
 import { jwtDecode } from "jwt-decode";
 import { useEffect } from "react";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 function getUsernameFromToken() {
   const token = localStorage.getItem("token");
@@ -25,6 +26,7 @@ const UserBar = ({ setIsLoggedIn }) => {
   function handleLogout() {
     localStorage.removeItem("token");
     setIsLoggedIn(false);
+    toast.success("Logged out.");
   }
 
   return (

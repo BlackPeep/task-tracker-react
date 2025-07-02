@@ -9,13 +9,19 @@ const Home = ({
   handleAddTask,
   handleToggleCheck,
   handleDeleteTask,
+  taskLists,
+  loadingTasks,
 }) => {
   return (
     <>
       {/* main content */}
       <main className="px-10 h-[calc(100vh-7.75rem)]  text-3xl  flex flex-col-reverse justify-end items-center lg:flex-row lg:items-start ">
         <Section>
-          {activeList ? (
+          {loadingTasks ? (
+            <p className="text-xl text-gray-400 animate-pulse">
+              Loading tasks...
+            </p>
+          ) : activeList ? (
             <Tasklist
               key={activeListId}
               tasks={activeList.tasks}
@@ -29,7 +35,10 @@ const Home = ({
         </Section>
 
         <Section>
-          <TaskForm onAddTask={(text) => handleAddTask(text, activeListId)} />
+          <TaskForm
+            onAddTask={(text) => handleAddTask(text, activeListId)}
+            taskLists={taskLists}
+          />
         </Section>
       </main>
     </>

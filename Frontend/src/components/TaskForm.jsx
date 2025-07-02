@@ -1,12 +1,23 @@
 import React from "react";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
-export const TaskForm = ({ onAddTask }) => {
+export const TaskForm = ({ onAddTask, taskLists }) => {
   const [inputValue, setInputValue] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!inputValue.trim()) return;
+
+    if (!taskLists || taskLists.length === 0) {
+      toast("Create a list first", { id: "no-list" });
+      return;
+    }
+
+    if (!inputValue.trim()) {
+      toast.error("task cannot be empty", { id: "empty-task" });
+      return;
+    }
+
     onAddTask(inputValue); // pass up to App
     setInputValue("");
   };

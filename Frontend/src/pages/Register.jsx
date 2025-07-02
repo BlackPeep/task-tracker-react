@@ -1,4 +1,5 @@
 import { useState } from "react";
+import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 const Register = ({ setIsLoggedIn }) => {
@@ -51,6 +52,7 @@ const Register = ({ setIsLoggedIn }) => {
 
       setIsLoggedIn(true);
       navigate("/");
+      toast.success("Created Account successfully");
     } catch (error) {
       setErrors({ apiError: "Network error. Please try again" });
     }
