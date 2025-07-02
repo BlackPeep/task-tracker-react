@@ -32,7 +32,7 @@ function App() {
   useEffect(() => {
     if (isLoggedIn) {
       setLoading(true);
-      fetch("http://localhost:5005/api/taskLists/", {
+      fetch("https://task-tracker-react.onrender.com/api/taskLists/", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -102,14 +102,17 @@ function App() {
     if (isLoggedIn) {
       const { _id, ...taskToSend } = newTask;
 
-      fetch(`http://localhost:5005/api/taskLists/${activeListId}/tasks`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(taskToSend),
-      })
+      fetch(
+        `https://task-tracker-react.onrender.com/api/taskLists/${activeListId}/tasks`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(taskToSend),
+        }
+      )
         .then((res) => res.json())
         .then((data) => {
           setTaskLists((prev) =>
@@ -144,7 +147,7 @@ function App() {
 
     if (isLoggedIn) {
       fetch(
-        `http://localhost:5005/api/taskLists/${activeListId}/tasks/${task._id}`,
+        `https://task-tracker-react.onrender.com/api/taskLists/${activeListId}/tasks/${task._id}`,
         {
           method: "DELETE",
           headers: {
@@ -182,7 +185,7 @@ function App() {
         const { id, ...taskToSend } = updatedTask;
 
         fetch(
-          `http://localhost:5005/api/taskLists/${activeListId}/tasks/${updatedTask._id}`,
+          `https://task-tracker-react.onrender.com/api/taskLists/${activeListId}/tasks/${updatedTask._id}`,
           {
             method: "PUT",
             headers: {
@@ -213,7 +216,7 @@ function App() {
     if (isLoggedIn) {
       const { id, ...listToSend } = newList;
 
-      fetch("http://localhost:5005/api/taskLists", {
+      fetch("https://task-tracker-react.onrender.com/api/taskLists", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -257,13 +260,16 @@ function App() {
     }
 
     if (isLoggedIn) {
-      fetch(`http://localhost:5005/api/taskLists/${activeListId}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }).catch((err) => {
+      fetch(
+        `https://task-tracker-react.onrender.com/api/taskLists/${activeListId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      ).catch((err) => {
         console.error("failed to sync to backend", err);
       });
     }
