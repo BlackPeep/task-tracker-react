@@ -10,6 +10,7 @@ import UserBar from "./components/UserBar";
 import toast, { Toaster } from "react-hot-toast";
 
 function App() {
+  const API_URL = "https://task-tracker-react-nine.vercel.app/";
   const token = localStorage.getItem("token");
   const [isLoggedIn, setIsLoggedIn] = useState(!!token);
 
@@ -32,7 +33,7 @@ function App() {
   useEffect(() => {
     if (isLoggedIn) {
       setLoading(true);
-      fetch("https://task-tracker-react.onrender.com/api/taskLists/", {
+      fetch(`${API_URL}api/taskLists/`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -102,17 +103,14 @@ function App() {
     if (isLoggedIn) {
       const { _id, ...taskToSend } = newTask;
 
-      fetch(
-        `https://task-tracker-react.onrender.com/api/taskLists/${activeListId}/tasks`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(taskToSend),
-        }
-      )
+      fetch(`${API_URL}api/taskLists/${activeListId}/tasks`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(taskToSend),
+      })
         .then((res) => res.json())
         .then((data) => {
           setTaskLists((prev) =>
@@ -146,16 +144,13 @@ function App() {
     );
 
     if (isLoggedIn) {
-      fetch(
-        `https://task-tracker-react.onrender.com/api/taskLists/${activeListId}/tasks/${task._id}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      ).catch((err) => {
+      fetch(`${API_URL}api/taskLists/${activeListId}/tasks/${task._id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }).catch((err) => {
         console.error("failed to sync to backend", err);
       });
     }
@@ -185,7 +180,7 @@ function App() {
         const { id, ...taskToSend } = updatedTask;
 
         fetch(
-          `https://task-tracker-react.onrender.com/api/taskLists/${activeListId}/tasks/${updatedTask._id}`,
+          `${API_URL}api/taskLists/${activeListId}/tasks/${updatedTask._id}`,
           {
             method: "PUT",
             headers: {
@@ -216,7 +211,7 @@ function App() {
     if (isLoggedIn) {
       const { id, ...listToSend } = newList;
 
-      fetch("https://task-tracker-react.onrender.com/api/taskLists", {
+      fetch(`${API_URL}api/taskLists`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -260,16 +255,13 @@ function App() {
     }
 
     if (isLoggedIn) {
-      fetch(
-        `https://task-tracker-react.onrender.com/api/taskLists/${activeListId}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      ).catch((err) => {
+      fetch(`${API_URL}api/taskLists/${activeListId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }).catch((err) => {
         console.error("failed to sync to backend", err);
       });
     }

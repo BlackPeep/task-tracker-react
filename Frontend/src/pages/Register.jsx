@@ -1,6 +1,7 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+const API_URL = "https://task-tracker-react-nine.vercel.app/";
 
 const Register = ({ setIsLoggedIn }) => {
   const navigate = useNavigate();
@@ -34,14 +35,11 @@ const Register = ({ setIsLoggedIn }) => {
     }
 
     try {
-      const response = await fetch(
-        "https://task-tracker-react.onrender.com/api/auth/register",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username, password }),
-        }
-      );
+      const response = await fetch(`${API_URL}api/auth/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      });
 
       if (!response.ok) {
         const errorData = await response.json();
