@@ -27,12 +27,12 @@ const Drawer = ({
         <hr />
       </div>
 
-      {taskLists.map((list) => (
+      {taskLists.map((list, key) => (
         <div
           className={`flex justify-between text-xl cursor-pointer p-3 border-b border-gray-200  shadow-sm 
           ${activeListId === list.id ? "bg-neutral-200 dark:bg-indigo-800" : ""}
           `}
-          key={list.id}
+          key={key}
           onClick={() => handleSelectList(list.id)}
         >
           <h3 className="max-w-4/5 w-4/5 break-words">{list.name}</h3>

@@ -14,10 +14,10 @@ export const Tasklist = ({ tasks, onDelete, onCheck, activeList }) => {
       </AnimatePresence>
       <ul>
         <AnimatePresence>
-          {tasks.map((task) => (
+          {tasks.map((task, key) => (
             <TaskItem
               task={task}
-              key={task.id}
+              key={key}
               onDelete={() => onDelete(task.id)}
               onCheck={() => onCheck(task.id)}
             />
