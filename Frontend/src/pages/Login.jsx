@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-const API_URL = "https://task-tracker-react-nine.vercel.app/";
+const API_URL = "https://task-tracker-react-426p.onrender.com/";
 
 const Login = ({ setIsLoggedIn }) => {
   const navigate = useNavigate();

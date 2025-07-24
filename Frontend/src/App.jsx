@@ -10,7 +10,7 @@ import UserBar from "./components/UserBar";
 import toast, { Toaster } from "react-hot-toast";
 
 function App() {
-  const API_URL = "https://task-tracker-react-nine.vercel.app/";
+  const API_URL = "https://task-tracker-react-426p.onrender.com/";
   const token = localStorage.getItem("token");
   const [isLoggedIn, setIsLoggedIn] = useState(!!token);
 
