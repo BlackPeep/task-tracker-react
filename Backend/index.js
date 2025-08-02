@@ -3,6 +3,8 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 require("dotenv").config();
 
+const app = express();
+
 app.use(
   cors({
     origin: ["http://localhost:5173", "https://blackpeep.github.io"], // update as needed
@@ -16,7 +18,6 @@ const authRoutes = require("./routes/auth");
 
 const protectRoute = require("./middleware/protectRoute");
 
-const app = express();
 const PORT = process.env.PORT || 5000;
 
 //Middleware
