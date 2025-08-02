@@ -14,10 +14,7 @@ const PORT = process.env.PORT || 5000;
 //Middleware
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "https://blackpeep.github.io/task-tracker-react/",
-    ], // update as needed
+    origin: ["http://localhost:5173", "https://blackpeep.github.io"], // update as needed
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
