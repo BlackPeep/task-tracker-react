@@ -3,6 +3,14 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 require("dotenv").config();
 
+app.use(
+  cors({
+    origin: ["http://localhost:5173", "https://blackpeep.github.io"], // update as needed
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
+
 const taskRoutes = require("./routes/tasks");
 const authRoutes = require("./routes/auth");
 
@@ -12,13 +20,7 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 //Middleware
-app.use(
-  cors({
-    origin: ["http://localhost:5173", "https://blackpeep.github.io"], // update as needed
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
-  })
-);
+
 app.use(express.json());
 
 //Routes
