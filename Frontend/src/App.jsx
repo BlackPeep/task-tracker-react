@@ -166,7 +166,7 @@ function App() {
         const newTasks = list.tasks.map((task) => {
           if (task.id === taskId) {
             // match by frontend id
-            updatedTask = { ...task, completed: !task.completed };
+            updatedTask = { ...task, completed: true };
             return updatedTask;
           }
           return task;
